@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Aaron</title>
+  
+  
+  <link href="http://example.com/atom.xml" rel="self"/>
+  
+  <link href="http://example.com/"/>
+  <updated>2021-10-12T19:45:27.851Z</updated>
+  <id>http://example.com/</id>
+  
+  <author>
+    <name>Aaron Liu</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>iOS 音频（一）</title>
+    <link href="http://example.com/2021/10/13/iOS%20%E9%9F%B3%E9%A2%91%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://example.com/2021/10/13/iOS%20%E9%9F%B3%E9%A2%91%EF%BC%88%E4%B8%80%EF%BC%89/</id>
+    <published>2021-10-13T04:00:00.000Z</published>
+    <updated>2021-10-12T19:45:27.851Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;iOS-音频（一）&quot;&gt;&lt;a href=&quot;#iOS-音频（一）&quot; class=&quot;headerlink&quot; title=&quot;iOS 音频（一）&quot;&gt;&lt;/a&gt;iOS 音频（一）&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;本篇是在做完公司的合拍需求后，对于音频处理的一些总结，如有错误的地方请指正&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;音频基础知识&quot;&gt;&lt;a href=&quot;#音频基础知识&quot; class=&quot;headerlink&quot; title=&quot;音频基础知识&quot;&gt;&lt;/a&gt;音频基础知识&lt;/h2&gt;&lt;p&gt;目前常见的音频格可以大致分为两种：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;有损压缩，例如：&lt;code&gt;MP3&lt;/code&gt;、&lt;code&gt;AAC&lt;/code&gt;、&lt;code&gt;OGG&lt;/code&gt;、&lt;code&gt;WMA&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;无损压缩，例如：&lt;code&gt;ALAC&lt;/code&gt;、&lt;code&gt;APE&lt;/code&gt;、&lt;code&gt;FLAC&lt;/code&gt;、&lt;code&gt;WAV&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;其中，对声音进行采样、量化过程被称为&lt;code&gt;脉冲编码调制&lt;/code&gt;（Pulse Code Modulation），简称&lt;code&gt;PCM&lt;/code&gt;。PCM数据是最原始的音频数据完全无损，但占用空间大，(&lt;code&gt;PCM&lt;/code&gt;电脑上可以用&lt;code&gt;FFPlay&lt;/code&gt; 设置采样率后播放)&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="iOS开发" scheme="http://example.com/categories/iOS%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="iOS" scheme="http://example.com/tags/iOS/"/>
+    
+    <category term="音频" scheme="http://example.com/tags/%E9%9F%B3%E9%A2%91/"/>
+    
+  </entry>
+  
+</feed>

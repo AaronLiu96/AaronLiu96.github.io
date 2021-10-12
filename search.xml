@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>iOS 音频（一）</title>
+    <url>/2021/10/13/iOS%20%E9%9F%B3%E9%A2%91%EF%BC%88%E4%B8%80%EF%BC%89/</url>
+    <content><![CDATA[<h1 id="iOS-音频（一）"><a href="#iOS-音频（一）" class="headerlink" title="iOS 音频（一）"></a>iOS 音频（一）</h1><blockquote>
+<p>本篇是在做完公司的合拍需求后，对于音频处理的一些总结，如有错误的地方请指正</p>
+</blockquote>
+<h2 id="音频基础知识"><a href="#音频基础知识" class="headerlink" title="音频基础知识"></a>音频基础知识</h2><p>目前常见的音频格可以大致分为两种：</p>
+<ol>
+<li>有损压缩，例如：<code>MP3</code>、<code>AAC</code>、<code>OGG</code>、<code>WMA</code></li>
+<li>无损压缩，例如：<code>ALAC</code>、<code>APE</code>、<code>FLAC</code>、<code>WAV</code></li>
+</ol>
+<p>其中，对声音进行采样、量化过程被称为<code>脉冲编码调制</code>（Pulse Code Modulation），简称<code>PCM</code>。PCM数据是最原始的音频数据完全无损，但占用空间大，(<code>PCM</code>电脑上可以用<code>FFPlay</code> 设置采样率后播放)</p>
+<span id="more"></span>  
+<p><strong>关于音频计算</strong></p>
+<ul>
+<li>采样率：指<strong>每秒钟取得声音样本的次数</strong>。采样频率越高，声音的质量也就越好，声音的还原也就越真实，但同时它占的资源比较多。由于人耳的分辨率很有限，太高的频率并不能分辨出来。</li>
+<li>采样位数：即<strong>采样值</strong>或取样值（声音的连续强度被数字表示后可以分为多少级，即将采样样本幅度量化）。它是用来衡量声音波动变化的一个参数，也可以说是声卡的分辨率。它的数值越大，分辨率也就越高，所发出声音的能力越强。<ul>
+<li>8 bit -&gt; 记录 256（2^8）个数，振幅划分成 256 个等级 </li>
+<li>16 bit -&gt; 记录65536(2^16) 个数，振幅划分成 65536 个等级 </li>
+</ul>
+</li>
+<li>通道数：<strong>声音的通道的数目</strong>。常有单声道和立体声之分，单声道的声音只能使用一个喇叭发声（有的也处理成两个喇叭输出同一个声道的声音），立体声可以使两个喇叭都发声（一般左右声道有分工） ，更能感受到空间效果，当然还有更多的通道数。<ul>
+<li>单声道 mono</li>
+<li>双声道 stereo （左右）</li>
+<li>2.1 </li>
+<li>5.1</li>
+<li>7.1</li>
+</ul>
+</li>
+<li>每秒数据大小：采样率 * 采样通道 * 位深度 / 8</li>
+</ul>
+<p>以项目中为例：</p>
+<blockquote>
+<p>采样率 = 44100，采样通道 = 1，位深度 =16，采样间隔 = 20ms</p>
+<p>一秒钟50帧 ，每帧大小为： 88200 / 50 = 1764 byte == 882 short</p>
+</blockquote>
+<h2 id="AVAudioSession"><a href="#AVAudioSession" class="headerlink" title="AVAudioSession"></a>AVAudioSession</h2><blockquote>
+<p>做项目的时候，合拍需求需要同时播放音视频，同时需要录制用户的声音。在做的过程中发现，不去设置AVAudioSession，则使用蓝牙耳机时，视频播放的声音仍然会通过扬声器播放，以及一些意想不到的问题。</p>
+</blockquote>
+<p><code>AVAudioSession</code> 会自带一些默认的设置，以便在没有设置的情况下，能够应对一些简单的场景，先来考虑两个常见的场景：</p>
+<ol>
+<li>语音通话时，手机的其他app正在播放音乐</li>
+<li>地图导航，当需要语音播报，手机的音乐会减少</li>
+</ol>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p><img src="https://imagedatabase-1259343097.cos.ap-beijing.myqcloud.com/blogImage/ASPG_intro_2x.png" alt="图片来自官方"></p>
+<p>简单来说，<code>AVAudioSession</code>的作用分为三点：</p>
+<ol>
+<li>协调多个App的音频播放</li>
+<li>告诉系统如何使用音频：录音、播放、边录边播</li>
+<li>设置输入输出设备</li>
+</ol>
+<p>APP启动的时候会自动帮激活<code>AVAudioSession</code>，APP维护一个<code>AVAudioSession</code> 的单例</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> AVFoundation</span><br><span class="line"></span><br><span class="line"><span class="type">AVAudioSession</span>.sharedInstance()</span><br></pre></td></tr></table></figure>
+
+<h3 id="AVAudioSession-Category"><a href="#AVAudioSession-Category" class="headerlink" title="AVAudioSession Category"></a>AVAudioSession Category</h3><p>目前<code>AVAudioSession</code> 所支持的<code>category</code> 共有 7 种：</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>是否会被静音键或锁屏键静音</th>
+<th>是否打断不支持混音播放的应用</th>
+<th>是否允许音频输入/输出</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AVAudioSessionCategoryAmbient</td>
+<td>Yes</td>
+<td>NO</td>
+<td>只输出</td>
+<td>只播放音频，不会被打断</td>
+</tr>
+<tr>
+<td>AVAudioSessionCategoryAudioProcessing</td>
+<td>NO</td>
+<td>YES</td>
+<td>无输入和输出</td>
+<td>音频处理</td>
+</tr>
+<tr>
+<td>AVAudioSessionCategoryMultiRoute</td>
+<td>NO</td>
+<td>YES</td>
+<td>支持输入和输出</td>
+<td>支持音频播放和录制（允许多条音频流的同步输入和输出)</td>
+</tr>
+<tr>
+<td>AVAudioSessionCategoryPlayAndRecord</td>
+<td>NO</td>
+<td>默认 YES，可重写开关置为 NO</td>
+<td>支持输入和输出</td>
+<td>支持音频播放和录制。</td>
+</tr>
+<tr>
+<td>AVAudioSessionCategoryPlayback</td>
+<td>NO</td>
+<td>默认 YES，可重写开关置为 NO</td>
+<td>只输出</td>
+<td>只播放音频，一般音乐播放器都会选择这个</td>
+</tr>
+<tr>
+<td>AVAudioSessionCategoryRecord</td>
+<td>NO（锁屏时依然保持录制）</td>
+<td>YES</td>
+<td>只输入</td>
+<td>只支持音频录制</td>
+</tr>
+<tr>
+<td>AVAudioSessionCategorySoloAmbient(默认)</td>
+<td>YES</td>
+<td>YES</td>
+<td>只输出</td>
+<td>只播放音频，会被打断</td>
+</tr>
+</tbody></table>
+<p><strong>第一个坑：</strong></p>
+<p>如果<code>AVAudioSession</code> 处于<code>inactive</code> 的状态，那么<code>setCategory</code> 会在激活时才发送，不会立即生效，若处于<code>active</code>状态，则立即生效。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try?</span> <span class="type">AVAudioSession</span>.sharedInstance().setCategory(.playAndRecord)</span><br><span class="line"><span class="keyword">try?</span> <span class="type">AVAudioSession</span>.sharedInstance().setActive(<span class="literal">true</span>)</span><br><span class="line"><span class="comment">/// 建议在init方法里面就激活一下</span></span><br></pre></td></tr></table></figure>
+
+<p>若当前App激活了<code>AVAudioSession</code>，则其他App的<code>AVAudioSession</code> 会失效，若想让其他App重新也能被激活：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">AVAudioSession</span>.sharedInstance().setActive(<span class="literal">true</span>, options: .notifyOthersOnDeactivation)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>小结：</strong></p>
+<p>到此为止。很清楚的可以看到，常见的：</p>
+<p>若需求是单纯的音频播放，例如播放器等选择：AVAudioSessionCategoryPlayback</p>
+<p>若需求是需要录制，例如录音机，录制视频等选择：AVAudioSessionCategoryRecord</p>
+<p>若需求是需要录制同时播放声音，例如短视频合拍等选择：AVAudioSessionCategoryPlayAndRecord</p>
+<h3 id="AVAudioSession-Option"><a href="#AVAudioSession-Option" class="headerlink" title="AVAudioSession Option"></a>AVAudioSession Option</h3><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>说明</th>
+<th>兼容的 Category</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AVAudioSessionCategoryOptionMixWithOthers</td>
+<td>允许和其他音频 mix</td>
+<td>AVAudioSessionCategoryPlayAndRecord AVAudioSessionCategoryPlayback AVAudioSessionCategoryMultiRoute</td>
+<td>例如：当前App播放的声音想与QQ音乐播放的声音并存</td>
+</tr>
+<tr>
+<td>AVAudioSessionCategoryOptionDuckOthers</td>
+<td>智能调低冲突音频音量</td>
+<td>AVAudioSessionCategoryPlayAndRecord AVAudioSessionCategoryPlayback AVAudioSessionCategoryMultiRoute</td>
+<td>例如：导航时，语音播报并不会打断QQ音乐的声音，只是让其他App声音变小</td>
+</tr>
+<tr>
+<td>AVAudioSessionCategoryOptionAllowBluetooth</td>
+<td>允许蓝牙音频输入</td>
+<td>AVAudioSessionCategoryRecord AVAudioSessionCategoryPlayAndRecord</td>
+<td>若要支持蓝牙耳机，这个是必备的</td>
+</tr>
+<tr>
+<td>AVAudioSessionCategoryOptionDefaultToSpeaker</td>
+<td>默认输出音频到扬声器</td>
+<td>AVAudioSessionCategoryPlayAndRecord</td>
+<td>将音频输出到扬声器</td>
+</tr>
+</tbody></table>
+<p>除此之外，在iOS9还提供了<code>AVAudioSessionCategoryOptionInterruptSpokenAudioAndMixWithOthers</code>最新的iOS10又新加了两个<code>AVAudioSessionCategoryOptionAllowBluetoothA2DP</code>    、<code>AVAudioSessionCategoryOptionAllowAirPlay</code>用来支持蓝牙A2DP耳机和AirPlay。</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">/// 通过这个方法设置option</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">setCategory</span>(<span class="keyword">_</span> <span class="params">category</span>: <span class="type">AVAudioSession</span>.<span class="type">Category</span>, <span class="params">options</span>: <span class="type">AVAudioSession</span>.<span class="type">CategoryOptions</span> <span class="operator">=</span> [])</span> <span class="keyword">throws</span></span><br></pre></td></tr></table></figure>
+
+<p>第二个坑：</p>
+<p>一般来说，所有的<code>Category</code>和<code>Option</code>都会遵循 <code>last in wins</code> 原则，即最后接入的音频设备作为输入或输出的主设备。同时用于播放音频的App都需要考虑到用户使用蓝牙耳机的情况，若不设置<code>AVAudioSessionCategoryOptionAllowBluetooth</code>,则可能出现虽然链接蓝牙耳机，但在<code>一边录制一边播放</code>的情况下，音频还是会从扬声器种播放出来。</p>
+<h3 id="AVAudioSession-Mode"><a href="#AVAudioSession-Mode" class="headerlink" title="AVAudioSession Mode"></a>AVAudioSession Mode</h3><p>以上的<code>Category</code>和<code>Option</code>基本上能够满足大部分的App使用，对于特定的情况，例如通话、游戏，<code>AVAudioSession</code>还有自己特殊的优化 <code>Mode</code>：</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>兼容的 Category</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AVAudioSessionModeDefault</td>
+<td>All</td>
+<td>默认格式</td>
+</tr>
+<tr>
+<td>AVAudioSessionModeVoiceChat</td>
+<td>AVAudioSessionCategoryPlayAndRecord</td>
+<td>VoIP 类型的应用</td>
+</tr>
+<tr>
+<td>AVAudioSessionModeGameChat</td>
+<td>AVAudioSessionCategoryPlayAndRecord</td>
+<td>适用于游戏类应用</td>
+</tr>
+<tr>
+<td>AVAudioSessionModeVideoRecording</td>
+<td>AVAudioSessionCategoryPlayAndRecord AVAudioSessionCategoryRecord</td>
+<td>适用于使用摄像头采集视频的应用，搭配AVCaptureSession使用</td>
+</tr>
+<tr>
+<td>AVAudioSessionModeMoviePlayback</td>
+<td>AVAudioSessionCategoryPlayback</td>
+<td>适用于播放视频的应用</td>
+</tr>
+<tr>
+<td>AVAudioSessionModeMeasurement</td>
+<td>AVAudioSessionCategoryPlayAndRecord AVAudioSessionCategoryRecord AVAudioSessionCategoryPlayback</td>
+<td>最小化系统（？？？ 不是很清楚）</td>
+</tr>
+<tr>
+<td>AVAudioSessionModeVideoChat</td>
+<td>AVAudioSessionCategoryPlayAndRecord</td>
+<td>视频聊天类型应用</td>
+</tr>
+</tbody></table>
+<h2 id="状态监听"><a href="#状态监听" class="headerlink" title="状态监听"></a>状态监听</h2><h3 id="耳机"><a href="#耳机" class="headerlink" title="耳机"></a>耳机</h3><p>这部分直接上代码吧：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">/// 是否有耳机</span></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">isUseHeadphones</span>()</span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> isUse <span class="operator">=</span> <span class="type">AVAudioSession</span>.sharedInstance().currentRoute.outputs.first &#123;</span><br><span class="line">            <span class="variable">$0</span>.portType.rawValue <span class="operator">==</span> <span class="type">AVAudioSession</span>.<span class="type">Port</span>.headphones.rawValue <span class="operator">||</span></span><br><span class="line">            <span class="variable">$0</span>.portType.rawValue <span class="operator">==</span> <span class="type">AVAudioSession</span>.<span class="type">Port</span>.bluetoothA2DP.rawValue <span class="operator">||</span></span><br><span class="line">            <span class="variable">$0</span>.portType.rawValue <span class="operator">==</span> <span class="type">AVAudioSession</span>.<span class="type">Port</span>.bluetoothHFP.rawValue <span class="operator">||</span></span><br><span class="line">            <span class="variable">$0</span>.portType.rawValue <span class="operator">==</span> <span class="type">AVAudioSession</span>.<span class="type">Port</span>.bluetoothLE.rawValue <span class="operator">||</span></span><br><span class="line">            <span class="variable">$0</span>.portType.rawValue <span class="operator">==</span> <span class="type">AVAudioSession</span>.<span class="type">Port</span>.airPlay.rawValue</span><br><span class="line">        &#125; <span class="operator">!=</span> <span class="literal">nil</span></span><br><span class="line">        <span class="keyword">return</span> isUse</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>判断耳机种类：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">updateHeadPhonesStatus</span>()</span> &#123;</span><br><span class="line">        <span class="keyword">guard</span> <span class="keyword">let</span> des <span class="operator">=</span> <span class="type">AVAudioSession</span>.sharedInstance().currentRoute.outputs.first <span class="keyword">else</span> &#123;<span class="keyword">return</span>&#125;</span><br><span class="line">        <span class="keyword">if</span> des.portType.rawValue <span class="operator">==</span> <span class="type">AVAudioSession</span>.<span class="type">Port</span>.headphones.rawValue &#123;</span><br><span class="line">            <span class="comment">// 有线耳机</span></span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (des.portType.rawValue <span class="operator">==</span> <span class="type">AVAudioSession</span>.<span class="type">Port</span>.bluetoothA2DP.rawValue <span class="operator">||</span></span><br><span class="line">                    des.portType.rawValue <span class="operator">==</span> <span class="type">AVAudioSession</span>.<span class="type">Port</span>.bluetoothHFP.rawValue <span class="operator">||</span></span><br><span class="line">                    des.portType.rawValue <span class="operator">==</span> <span class="type">AVAudioSession</span>.<span class="type">Port</span>.bluetoothLE.rawValue <span class="operator">||</span></span><br><span class="line">                    des.portType.rawValue <span class="operator">==</span> <span class="type">AVAudioSession</span>.<span class="type">Port</span>.airPlay.rawValue) &#123;</span><br><span class="line">            <span class="comment">//  蓝牙耳机</span></span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//外放扬声器</span></span><br><span class="line">        context<span class="operator">?</span>.controller<span class="operator">?</span>.handleChangeDeviceStatus(to: .loudSpeaker)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="外设状态"><a href="#外设状态" class="headerlink" title="外设状态"></a>外设状态</h3><p>首先需要注册一个<code>AVAudioSession.routeChangeNotification</code>:</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">observers.append(<span class="type">NotificationCenter</span>.default.addObserver(forName: <span class="type">AVAudioSession</span>.routeChangeNotification, object: <span class="literal">nil</span>, queue: .main) &#123; [<span class="keyword">weak</span> <span class="keyword">self</span>] notification <span class="keyword">in</span></span><br><span class="line">            <span class="keyword">self</span><span class="operator">?</span>.handleSessionRouteChange(notification)</span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="type">UIApplication</span>.shared.beginReceivingRemoteControlEvents()</span><br></pre></td></tr></table></figure>
+
+<p>目前状态是一个枚举，主要分为8种：</p>
+<table>
+<thead>
+<tr>
+<th>枚举值</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AVAudioSessionRouteChangeReasonUnknown</td>
+<td>未知原因</td>
+</tr>
+<tr>
+<td>AVAudioSessionRouteChangeReasonNewDeviceAvailable</td>
+<td>有新设备可用</td>
+</tr>
+<tr>
+<td>AVAudioSessionRouteChangeReasonOldDeviceUnavailable</td>
+<td>老设备不可用</td>
+</tr>
+<tr>
+<td>AVAudioSessionRouteChangeReasonCategoryChange</td>
+<td>类别改变了</td>
+</tr>
+<tr>
+<td>AVAudioSessionRouteChangeReasonOverride</td>
+<td>App重置了输出设置</td>
+</tr>
+<tr>
+<td>AVAudioSessionRouteChangeReasonWakeFromSleep</td>
+<td>从睡眠状态呼醒</td>
+</tr>
+<tr>
+<td>AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory</td>
+<td>当前Category下没有合适的设备</td>
+</tr>
+<tr>
+<td>AVAudioSessionRouteChangeReasonRouteConfigurationChange</td>
+<td>Rotuer的配置改变了</td>
+</tr>
+</tbody></table>
+<p>可以通过判断返回的枚举值，去做相应的处理，例如拔出耳机时，停止播放，更新耳机状体等等。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上就是对于一些音频知识的总结，最开始的两个场景解决办法应该自然而然出来了，本篇主要是针对<code>AVAudioSession</code>做的分析，若有问题，请还望多包涵和指正。下一小节将会去介绍音频处理相关的内容。</p>
+]]></content>
+      <categories>
+        <category>iOS开发</category>
+      </categories>
+      <tags>
+        <tag>iOS</tag>
+        <tag>音频</tag>
+      </tags>
+  </entry>
+</search>
