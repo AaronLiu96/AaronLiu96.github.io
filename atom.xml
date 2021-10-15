@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-10-12T19:45:27.851Z</updated>
+  <updated>2021-10-15T09:17:28.039Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -21,10 +21,10 @@
     <link href="http://example.com/2021/10/13/iOS%20%E9%9F%B3%E9%A2%91%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://example.com/2021/10/13/iOS%20%E9%9F%B3%E9%A2%91%EF%BC%88%E4%B8%80%EF%BC%89/</id>
     <published>2021-10-13T04:00:00.000Z</published>
-    <updated>2021-10-12T19:45:27.851Z</updated>
+    <updated>2021-10-15T09:17:28.039Z</updated>
     
     
-    <summary type="html">&lt;h1 id=&quot;iOS-音频（一）&quot;&gt;&lt;a href=&quot;#iOS-音频（一）&quot; class=&quot;headerlink&quot; title=&quot;iOS 音频（一）&quot;&gt;&lt;/a&gt;iOS 音频（一）&lt;/h1&gt;&lt;blockquote&gt;
+    <summary type="html">&lt;blockquote&gt;
 &lt;p&gt;本篇是在做完公司的合拍需求后，对于音频处理的一些总结，如有错误的地方请指正&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&quot;音频基础知识&quot;&gt;&lt;a href=&quot;#音频基础知识&quot; class=&quot;headerlink&quot; title=&quot;音频基础知识&quot;&gt;&lt;/a&gt;音频基础知识&lt;/h2&gt;&lt;p&gt;目前常见的音频格可以大致分为两种：&lt;/p&gt;

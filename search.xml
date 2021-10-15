@@ -3,7 +3,7 @@
   <entry>
     <title>iOS 音频（一）</title>
     <url>/2021/10/13/iOS%20%E9%9F%B3%E9%A2%91%EF%BC%88%E4%B8%80%EF%BC%89/</url>
-    <content><![CDATA[<h1 id="iOS-音频（一）"><a href="#iOS-音频（一）" class="headerlink" title="iOS 音频（一）"></a>iOS 音频（一）</h1><blockquote>
+    <content><![CDATA[<blockquote>
 <p>本篇是在做完公司的合拍需求后，对于音频处理的一些总结，如有错误的地方请指正</p>
 </blockquote>
 <h2 id="音频基础知识"><a href="#音频基础知识" class="headerlink" title="音频基础知识"></a>音频基础知识</h2><p>目前常见的音频格可以大致分为两种：</p>
@@ -59,10 +59,10 @@
 <thead>
 <tr>
 <th>Category</th>
-<th>是否会被静音键或锁屏键静音</th>
-<th>是否打断不支持混音播放的应用</th>
-<th>是否允许音频输入/输出</th>
-<th>解释</th>
+<th>是否会被静音<br>键或锁屏键静音</th>
+<th>是否打断不支持混音<br>播放的应用</th>
+<th>是否允许音频<br>输入/输出</th>
+<th><div style="width: 150pt">解释</div></th>
 </tr>
 </thead>
 <tbody><tr>
@@ -135,7 +135,7 @@
 <th>Option</th>
 <th>说明</th>
 <th>兼容的 Category</th>
-<th>解释</th>
+<th><div style="width: 150pt">解释</div></th>
 </tr>
 </thead>
 <tbody><tr>
@@ -174,7 +174,7 @@
 <tr>
 <th>Mode</th>
 <th>兼容的 Category</th>
-<th>说明</th>
+<th><div style="width: 150pt">说明</div></th>
 </tr>
 </thead>
 <tbody><tr>
