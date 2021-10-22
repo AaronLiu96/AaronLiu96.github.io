@@ -13,10 +13,10 @@
 <li>。。。</li>
 </ul>
 <blockquote>
-<p>但是，我几乎没有找到其他格式能直接转换为<code>PCM</code>的代码(有可能是没有找到），若是有这一块需求的同学，建议联系sdk去做处理</p>
+<p>但是，我几乎没有找到其他格式能直接转换为<code>PCM</code>的代码(有可能是没有找到），若是有这一块需求的同学，建议联系sdk去做处理<br>有一点值得提的是，在iOS上，通过<code>AVAudioRecorder</code>录制的音频格式默认为PCM，其初始化的方法为：</p>
 </blockquote>
 <span id="more"></span>  
-<p>有一点值得提的是，在iOS上，通过<code>AVAudioRecorder</code>录制的音频格式默认为PCM，其初始化的方法为：</p>
+
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">- (nullable instancetype)initWithURL:(NSURL *)url settings:(NSDictionary&lt;NSString *, id&gt; *)settings error:(NSError **)outError;</span><br></pre></td></tr></table></figure>
 
 <p>在这其中，iOS7 中。默认的setting是：</p>

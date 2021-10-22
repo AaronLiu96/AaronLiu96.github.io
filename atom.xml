@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Aaron</title>
+  <title>Hi, Aaron</title>
   
   
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-10-22T09:32:38.290Z</updated>
+  <updated>2021-10-22T09:34:25.698Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://example.com/2021/10/22/iOS%20%E9%9F%B3%E9%A2%91(%E4%BA%8C)/"/>
     <id>http://example.com/2021/10/22/iOS%20%E9%9F%B3%E9%A2%91(%E4%BA%8C)/</id>
     <published>2021-10-22T11:21:00.000Z</published>
-    <updated>2021-10-22T09:32:38.290Z</updated>
+    <updated>2021-10-22T09:34:25.698Z</updated>
     
     
     <summary type="html">&lt;blockquote&gt;
@@ -34,7 +34,7 @@
 &lt;li&gt;。。。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
-&lt;p&gt;但是，我几乎没有找到其他格式能直接转换为&lt;code&gt;PCM&lt;/code&gt;的代码(有可能是没有找到），若是有这一块需求的同学，建议联系sdk去做处理&lt;/p&gt;
+&lt;p&gt;但是，我几乎没有找到其他格式能直接转换为&lt;code&gt;PCM&lt;/code&gt;的代码(有可能是没有找到），若是有这一块需求的同学，建议联系sdk去做处理&lt;br&gt;有一点值得提的是，在iOS上，通过&lt;code&gt;AVAudioRecorder&lt;/code&gt;录制的音频格式默认为PCM，其初始化的方法为：&lt;/p&gt;
 &lt;/blockquote&gt;</summary>
     
     
