@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-10-22T09:24:35.139Z</updated>
+  <updated>2021-10-22T09:32:38.290Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -17,23 +17,34 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
-    <link href="http://example.com/2021/10/15/iOS%20%E9%9F%B3%E9%A2%91(%E4%BA%8C)/"/>
-    <id>http://example.com/2021/10/15/iOS%20%E9%9F%B3%E9%A2%91(%E4%BA%8C)/</id>
-    <published>2021-10-15T07:04:28.896Z</published>
-    <updated>2021-10-22T09:24:35.139Z</updated>
+    <title>iOS 音频（二）</title>
+    <link href="http://example.com/2021/10/22/iOS%20%E9%9F%B3%E9%A2%91(%E4%BA%8C)/"/>
+    <id>http://example.com/2021/10/22/iOS%20%E9%9F%B3%E9%A2%91(%E4%BA%8C)/</id>
+    <published>2021-10-22T11:21:00.000Z</published>
+    <updated>2021-10-22T09:32:38.290Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;iOS-音频处理二&quot;&gt;&lt;a href=&quot;#iOS-音频处理二&quot; class=&quot;headerlink&quot; title=&quot;iOS 音频处理二&quot;&gt;&lt;/a&gt;iOS</summary>
-        
-      
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;接上一节的音频，本章主要将音频处理问题&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;iOS上的PCM&quot;&gt;&lt;a href=&quot;#iOS上的PCM&quot; class=&quot;headerlink&quot; title=&quot;iOS上的PCM&quot;&gt;&lt;/a&gt;iOS上的PCM&lt;/h2&gt;&lt;p&gt;通常来说，第一时间肯定是想的是格式之间的转换。现在网上有很多&lt;code&gt;PCM&lt;/code&gt; 转换到各种类型的方案。例如：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;PCM -&amp;gt; wav &lt;a href=&quot;https://www.jianshu.com/p/007fd82b0940&quot;&gt;pcm 转 wav代码&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;pcm -&amp;gt; mp3 &lt;a href=&quot;https://lame.sourceforge.io/&quot;&gt;LAME&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;。。。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;但是，我几乎没有找到其他格式能直接转换为&lt;code&gt;PCM&lt;/code&gt;的代码(有可能是没有找到），若是有这一块需求的同学，建议联系sdk去做处理&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
     
     
     
+    <category term="iOS开发" scheme="http://example.com/categories/iOS%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="iOS" scheme="http://example.com/tags/iOS/"/>
+    
+    <category term="音频" scheme="http://example.com/tags/%E9%9F%B3%E9%A2%91/"/>
     
   </entry>
   
