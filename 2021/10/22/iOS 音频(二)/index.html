@@ -86,7 +86,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.4k</span>
+            <span class="post-count">1.9k</span>
         </span>
     </span>
 
@@ -95,7 +95,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">6 min</span>
+            <span class="post-count">8 min</span>
         </span>
     </span>
 </div>
@@ -113,6 +113,36 @@
   <blockquote>
 <p>接上一节的音频，本章主要将音频处理问题</p>
 </blockquote>
+<h2 id="音频基础知识"><a href="#音频基础知识" class="headerlink" title="音频基础知识"></a>音频基础知识</h2><p>目前常见的音频格可以大致分为两种：</p>
+<ol>
+<li>有损压缩，例如：<code>MP3</code>、<code>AAC</code>、<code>OGG</code>、<code>WMA</code></li>
+<li>无损压缩，例如：<code>ALAC</code>、<code>APE</code>、<code>FLAC</code>、<code>WAV</code></li>
+</ol>
+<p>其中，对声音进行采样、量化过程被称为<code>脉冲编码调制</code>（Pulse Code Modulation），简称<code>PCM</code>。PCM数据是最原始的音频数据完全无损，但占用空间大，(<code>PCM</code>电脑上可以用<code>FFPlay</code> 设置采样率后播放)</p>
+<span id="more"></span>  
+<p><strong>关于音频计算</strong></p>
+<ul>
+<li>采样率：指<strong>每秒钟取得声音样本的次数</strong>。采样频率越高，声音的质量也就越好，声音的还原也就越真实，但同时它占的资源比较多。由于人耳的分辨率很有限，太高的频率并不能分辨出来。</li>
+<li>采样位数：即<strong>采样值</strong>或取样值（声音的连续强度被数字表示后可以分为多少级，即将采样样本幅度量化）。它是用来衡量声音波动变化的一个参数，也可以说是声卡的分辨率。它的数值越大，分辨率也就越高，所发出声音的能力越强。<ul>
+<li>8 bit -&gt; 记录 256（2^8）个数，振幅划分成 256 个等级 </li>
+<li>16 bit -&gt; 记录65536(2^16) 个数，振幅划分成 65536 个等级 </li>
+</ul>
+</li>
+<li>通道数：<strong>声音的通道的数目</strong>。常有单声道和立体声之分，单声道的声音只能使用一个喇叭发声（有的也处理成两个喇叭输出同一个声道的声音），立体声可以使两个喇叭都发声（一般左右声道有分工） ，更能感受到空间效果，当然还有更多的通道数。<ul>
+<li>单声道 mono</li>
+<li>双声道 stereo （左右）</li>
+<li>2.1 </li>
+<li>5.1</li>
+<li>7.1</li>
+</ul>
+</li>
+<li>每秒数据大小：采样率 * 采样通道 * 位深度 / 8</li>
+</ul>
+<p>以项目中为例：</p>
+<blockquote>
+<p>采样率 = 44100，采样通道 = 1，位深度 =16，采样间隔 = 20ms</p>
+<p>一秒钟50帧 ，每帧大小为： 88200 / 50 = 1764 byte == 882 short</p>
+</blockquote>
 <h2 id="iOS上的PCM"><a href="#iOS上的PCM" class="headerlink" title="iOS上的PCM"></a>iOS上的PCM</h2><p>通常来说，第一时间肯定是想的是格式之间的转换。现在网上有很多<code>PCM</code> 转换到各种类型的方案。例如：</p>
 <ul>
 <li>PCM -&gt; wav <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/007fd82b0940">pcm 转 wav代码</a></li>
@@ -122,7 +152,7 @@
 <blockquote>
 <p>但是，我几乎没有找到其他格式能直接转换为<code>PCM</code>的代码(有可能是没有找到），若是有这一块需求的同学，建议联系sdk去做处理<br>有一点值得提的是，在iOS上，通过<code>AVAudioRecorder</code>录制的音频格式默认为PCM，其初始化的方法为：</p>
 </blockquote>
-<span id="more"></span>  
+<!--more-->  
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (nullable instancetype)initWithURL:(NSURL *)url settings:(NSDictionary&lt;NSString *, id&gt; *)settings error:(NSError **)outError;</span><br></pre></td></tr></table></figure>
 
@@ -148,7 +178,7 @@
 <h2 id="音视频编辑"><a href="#音视频编辑" class="headerlink" title="音视频编辑"></a>音视频编辑</h2><p>在iOS 中，音频编辑离不开<code>AVMutableComposition</code>，<code>AVMutableComposition</code> 提供了接口来插入或者删除轨道，也可以调整这些轨道的顺序。一个 <code>composition</code> 可以简单的认为是一组轨道（tracks）的集合，这些轨道可以是来自不同媒体资源（asset）。</p>
 <blockquote>
 <p>前提知识：一个工程文件中有很多轨道，如音频轨道1，音频轨道2，音频轨道3，视频轨道1，视频轨道2等等，每个轨道里有许多素材，对于每个视频素材，它可以进行缩放、旋转等操作，素材库中的视频拖到轨道中会分为视频轨和音频轨两个轨道。<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ee868d0ff7c4">参考</a></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">AVAsset</span>：素材库里的素材； </span><br><span class="line"><span class="built_in">AVAssetTrack</span>：素材的轨道； </span><br><span class="line"><span class="built_in">AVMutableComposition</span> ：一个用来合成视频的工程文件； </span><br><span class="line"><span class="built_in">AVMutableCompositionTrack</span> ：工程文件中的轨道，有音频轨、视频轨等，里面可以插入各种对应的素材； </span><br><span class="line"><span class="built_in">AVMutableVideoCompositionLayerInstruction</span>：视频轨道中的一个视频，可以缩放、旋转等； </span><br><span class="line"><span class="built_in">AVMutableVideoCompositionInstruction</span>：一个视频轨道，包含了这个轨道上的所有视频素材； </span><br><span class="line"><span class="built_in">AVMutableVideoComposition</span>：管理所有视频轨道，可以决定最终视频的尺寸，裁剪需要在这里进行； </span><br><span class="line"><span class="built_in">AVAssetExportSession</span>：配置渲染参数并渲染。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">AVAsset：素材库里的素材； </span><br><span class="line">AVAssetTrack：素材的轨道； </span><br><span class="line">AVMutableComposition ：一个用来合成视频的工程文件； </span><br><span class="line">AVMutableCompositionTrack ：工程文件中的轨道，有音频轨、视频轨等，里面可以插入各种对应的素材； </span><br><span class="line">AVMutableVideoCompositionLayerInstruction：视频轨道中的一个视频，可以缩放、旋转等； </span><br><span class="line">AVMutableVideoCompositionInstruction：一个视频轨道，包含了这个轨道上的所有视频素材； </span><br><span class="line">AVMutableVideoComposition：管理所有视频轨道，可以决定最终视频的尺寸，裁剪需要在这里进行； </span><br><span class="line">AVAssetExportSession：配置渲染参数并渲染。</span><br></pre></td></tr></table></figure>
 </blockquote>
 <p>一般来说，类似一个简单的mp3文件，它就只会有音频轨道。而对于一个mp4文件，它会有音频轨道、视频轨道（也可能没有，在写代码时，尤其需要注意），其次，PCM格式的文件是不存在轨道这类信息的，所以如果想要将PCM添加到视频中，一种比较笨的方法是，将PCM 先转换为mp3格式，再通过得到的mp3文件提取出音频轨道。</p>
 <p>以一个例子来具体解释，需求很简单，我想将一个视频的音频替换成一个pcm文件，并保存为，mov的格式：</p>

@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-10-22T09:38:05.425Z</updated>
+  <updated>2021-10-26T13:29:02.094Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -21,21 +21,18 @@
     <link href="http://example.com/2021/10/22/iOS%20%E9%9F%B3%E9%A2%91(%E4%BA%8C)/"/>
     <id>http://example.com/2021/10/22/iOS%20%E9%9F%B3%E9%A2%91(%E4%BA%8C)/</id>
     <published>2021-10-22T11:20:32.000Z</published>
-    <updated>2021-10-22T09:38:05.425Z</updated>
+    <updated>2021-10-26T13:29:02.094Z</updated>
     
     
     <summary type="html">&lt;blockquote&gt;
 &lt;p&gt;接上一节的音频，本章主要将音频处理问题&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2 id=&quot;iOS上的PCM&quot;&gt;&lt;a href=&quot;#iOS上的PCM&quot; class=&quot;headerlink&quot; title=&quot;iOS上的PCM&quot;&gt;&lt;/a&gt;iOS上的PCM&lt;/h2&gt;&lt;p&gt;通常来说，第一时间肯定是想的是格式之间的转换。现在网上有很多&lt;code&gt;PCM&lt;/code&gt; 转换到各种类型的方案。例如：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;PCM -&amp;gt; wav &lt;a href=&quot;https://www.jianshu.com/p/007fd82b0940&quot;&gt;pcm 转 wav代码&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;pcm -&amp;gt; mp3 &lt;a href=&quot;https://lame.sourceforge.io/&quot;&gt;LAME&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;。。。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;blockquote&gt;
-&lt;p&gt;但是，我几乎没有找到其他格式能直接转换为&lt;code&gt;PCM&lt;/code&gt;的代码(有可能是没有找到），若是有这一块需求的同学，建议联系sdk去做处理&lt;br&gt;有一点值得提的是，在iOS上，通过&lt;code&gt;AVAudioRecorder&lt;/code&gt;录制的音频格式默认为PCM，其初始化的方法为：&lt;/p&gt;
-&lt;/blockquote&gt;</summary>
+&lt;h2 id=&quot;音频基础知识&quot;&gt;&lt;a href=&quot;#音频基础知识&quot; class=&quot;headerlink&quot; title=&quot;音频基础知识&quot;&gt;&lt;/a&gt;音频基础知识&lt;/h2&gt;&lt;p&gt;目前常见的音频格可以大致分为两种：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;有损压缩，例如：&lt;code&gt;MP3&lt;/code&gt;、&lt;code&gt;AAC&lt;/code&gt;、&lt;code&gt;OGG&lt;/code&gt;、&lt;code&gt;WMA&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;无损压缩，例如：&lt;code&gt;ALAC&lt;/code&gt;、&lt;code&gt;APE&lt;/code&gt;、&lt;code&gt;FLAC&lt;/code&gt;、&lt;code&gt;WAV&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;其中，对声音进行采样、量化过程被称为&lt;code&gt;脉冲编码调制&lt;/code&gt;（Pulse Code Modulation），简称&lt;code&gt;PCM&lt;/code&gt;。PCM数据是最原始的音频数据完全无损，但占用空间大，(&lt;code&gt;PCM&lt;/code&gt;电脑上可以用&lt;code&gt;FFPlay&lt;/code&gt; 设置采样率后播放)&lt;/p&gt;</summary>
     
     
     
@@ -53,18 +50,16 @@
     <link href="http://example.com/2021/10/13/iOS%20%E9%9F%B3%E9%A2%91(%E4%B8%80)/"/>
     <id>http://example.com/2021/10/13/iOS%20%E9%9F%B3%E9%A2%91(%E4%B8%80)/</id>
     <published>2021-10-13T04:00:00.000Z</published>
-    <updated>2021-10-15T09:17:28.039Z</updated>
+    <updated>2021-10-26T13:35:18.740Z</updated>
     
     
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;本篇是在做完公司的合拍需求后，对于音频处理的一些总结，如有错误的地方请指正&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&quot;音频基础知识&quot;&gt;&lt;a href=&quot;#音频基础知识&quot; class=&quot;headerlink&quot; title=&quot;音频基础知识&quot;&gt;&lt;/a&gt;音频基础知识&lt;/h2&gt;&lt;p&gt;目前常见的音频格可以大致分为两种：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;有损压缩，例如：&lt;code&gt;MP3&lt;/code&gt;、&lt;code&gt;AAC&lt;/code&gt;、&lt;code&gt;OGG&lt;/code&gt;、&lt;code&gt;WMA&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;无损压缩，例如：&lt;code&gt;ALAC&lt;/code&gt;、&lt;code&gt;APE&lt;/code&gt;、&lt;code&gt;FLAC&lt;/code&gt;、&lt;code&gt;WAV&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;其中，对声音进行采样、量化过程被称为&lt;code&gt;脉冲编码调制&lt;/code&gt;（Pulse Code Modulation），简称&lt;code&gt;PCM&lt;/code&gt;。PCM数据是最原始的音频数据完全无损，但占用空间大，(&lt;code&gt;PCM&lt;/code&gt;电脑上可以用&lt;code&gt;FFPlay&lt;/code&gt; 设置采样率后播放)&lt;/p&gt;</summary>
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;AVAudioSession&quot;&gt;&lt;a href=&quot;#AVAudioSession&quot; class=&quot;headerlink&quot;</summary>
+        
+      
     
     
     
