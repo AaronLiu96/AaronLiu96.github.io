@@ -50,16 +50,20 @@
     <link href="http://example.com/2021/10/13/iOS%20%E9%9F%B3%E9%A2%91(%E4%B8%80)/"/>
     <id>http://example.com/2021/10/13/iOS%20%E9%9F%B3%E9%A2%91(%E4%B8%80)/</id>
     <published>2021-10-13T04:00:00.000Z</published>
-    <updated>2021-10-26T13:35:18.740Z</updated>
+    <updated>2021-11-18T18:48:50.186Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;AVAudioSession&quot;&gt;&lt;a href=&quot;#AVAudioSession&quot; class=&quot;headerlink&quot;</summary>
-        
-      
+    <summary type="html">&lt;h2 id=&quot;AVAudioSession&quot;&gt;&lt;a href=&quot;#AVAudioSession&quot; class=&quot;headerlink&quot; title=&quot;AVAudioSession&quot;&gt;&lt;/a&gt;AVAudioSession&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;做项目的时候，合拍需求需要同时播放音视频，同时需要录制用户的声音。在做的过程中发现，不去设置AVAudioSession，则使用蓝牙耳机时，视频播放的声音仍然会通过扬声器播放，以及一些意想不到的问题。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code&gt;AVAudioSession&lt;/code&gt; 会自带一些默认的设置，以便在没有设置的情况下，能够应对一些简单的场景&lt;/p&gt;
+&lt;h3 id=&quot;作用&quot;&gt;&lt;a href=&quot;#作用&quot; class=&quot;headerlink&quot; title=&quot;作用&quot;&gt;&lt;/a&gt;作用&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;https://imagedatabase-1259343097.cos.ap-beijing.myqcloud.com/blogImage/ASPG_intro_2x.png&quot; alt=&quot;图片来自官方&quot;&gt;&lt;/p&gt;
+&lt;p&gt;简单来说，&lt;code&gt;AVAudioSession&lt;/code&gt;的作用分为三点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;协调多个App的音频播放&lt;/li&gt;
+&lt;li&gt;告诉系统如何使用音频：录音、播放、边录边播&lt;/li&gt;
+&lt;li&gt;设置输入输出设备&lt;/li&gt;
+&lt;/ol&gt;</summary>
     
     
     
